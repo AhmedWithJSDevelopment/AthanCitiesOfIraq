@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Athan1City.css">
+
+</head>
+<!--  -->
+<!-- //// -->
+
+
+<body>
+    <div id="container">
+
+        <div id="cityNAMEDate">
+            <!-- cityNAME -->
+
+            <div id="styName">
+                <h1 id="city-name">ذي قار</h1>
+                <h6 id="date">الجمعة 24 ايار</h6>
+            </div>
+            <!-- //cityNAME// -->
+            <hr>
+            <!-- PRAYER TIMings -->
+
+
+            <div class="grid-container  ">
+                <div class="card  grid-item-1">
+
+                    <div class="header center">
+
+                        <h1>الفجر</h1>
+                    </div>
+                    <div class="body  center">
+
+                        <h1 class="time" id="fajer-time">4:30</h1>
+                    </div>
+                </div>
+                <div class="card  grid-item-2">
+
+                    <div class="header center">
+
+                        <h1>الشروق</h1>
+                    </div>
+                    <div class="body  center">
+
+                        <h1 class="time" id="sunrise-time">4:30</h1>
+                    </div>
+                </div>
+                <div class="card  grid-item-3">
+
+                    <div class="header center">
+
+                        <h1>الظهر</h1>
+                    </div>
+                    <div class="body  center">
+
+                        <h1 class="time" id="duhr-time">4:30</h1>
+                    </div>
+                </div>
+                <div class="card  grid-item-4">
+
+                    <div class="header center">
+
+                        <h1>العصر</h1>
+                    </div>
+                    <div class="body  center">
+
+                        <h1 class="time" id="asr-time">4:30</h1>
+                    </div>
+                </div>
+                <div class="card  grid-item-5">
+
+                    <div class="header center">
+
+                        <h1>المغرب</h1>
+                    </div>
+                    <div class="body  center">
+
+                        <h1 class="time" id="sunset-time">4:30</h1>
+                    </div>
+                </div>
+
+                <div class="card  grid-item-6">
+
+                    <div class="header center">
+
+                        <h1>العشاء</h1>
+                    </div>
+                    <div class="body  center">
+
+                        <h1 class="time" id="isha-time">4:30</h1>
+                    </div>
+                </div>
+            </div>
+            <!-- //PRAYER TIMings// -->
+            <!-- CHANGE city SELECT -->
+
+            <div class="center select">
+
+                <select name="" id="city-select" title="select">
+
+<!-- <option value="الرياض">الرياض </option>
+<option value="الرياض">الشرقية</option>
+<option value="الرياض">مكة  </option> -->
+
+
+
+                </select>
+
+
+            </div>
+            <!-- //CHANGE  city SELECT// -->
+
+        </div>
+    </div>
+</body>
+
+
+<!-- <script src="node_modules/axios/dist/axios.min.js"></script> -->
+
+<script src="./node_modules/axios/dist/axios.min.js"></script>
+
+<script>
+    let cities = [{
+        arabicName: " ذي قار",
+        isoName: "Dhī Qār"
+
+    }, {
+        arabicName: " البصرة",
+        isoName: "Al Başrah"
+
+    }, {
+        arabicName: " بغداد",
+        isoName: "Baghdād"
+
+    }, {
+        arabicName: " النجف",
+        isoName: "An Najaf"
+
+    }, {
+        arabicName: " بابل",
+        isoName: "Bābil"
+
+    }, {
+        arabicName: " المثنى",
+        isoName: "Al Muthanná"
+
+    }, {
+        arabicName: " واسط",
+        isoName: "Wāsiţ"
+
+    }, {
+        arabicName: " دهوك",
+        isoName: "Dahūk"
+
+    }, {
+        arabicName: " ميسان",
+        isoName: "Maysān"
+
+    }, {
+        arabicName: " صلاح الدين",
+        isoName: "	Şalāḩ ad Dīn"
+
+    }, {
+        arabicName: " نينوى",
+        isoName: "Nīnawá"
+
+    }, {
+        arabicName: " سليمانية",
+        isoName: "As Sulaymānīyah"
+
+    }]
+    for (let city of cities) {
+        let content = `
+         <option    value="${city.arabicName}"> ${city.arabicName} </option>
+            `
+        fillplass("city-select", content)
+            //= document.getElementById("city-select").innerHTML += content
+
+
+    }
+    document.getElementById("city-select").addEventListener("change", function() {
+
+
+
+        document.getElementById("city-name").innerHTML = this.value
+        let cityName = ""
+        for (let city of cities) {
+            if (city.arabicName == this.value) {
+                cityName = city.isoName
+            }
+
+        }
+        // document.getElementById("city-name").innerHTML = this.value
+
+        console.log(this.value)
+        getPrayersTimingsOfCity(cityName)
+
+    });
+
+
+
+    function getPrayersTimingsOfCity(cityName) {
+        let params = {
+            country: "IQ",
+            city: cityName //"Dhī Qār"
+        }
+        axios.get('http://api.aladhan.com/v1/timingsByCity', {
+                params: params
+            })
+            .then(function(response) {
+
+                const timings = response.data.data.timings;
+                // document.getElementById("fajer-time").innerHTML = timings
+                fillTimeForPrayer("fajer-time", timings.Fajr)
+                fillTimeForPrayer("sunrise-time", timings.Sunrise)
+                fillTimeForPrayer("duhr-time", timings.Dhuhr)
+                fillTimeForPrayer("asr-time", timings.Asr)
+                fillTimeForPrayer("sunset-time", timings.Sunset)
+                fillTimeForPrayer("isha-time", timings.Isha)
+
+                const redableDate = response.data.data.date.gregorian.date;
+                const weekDay = response.data.data.date.hijri.weekday.ar;
+                const data = weekDay + " " + redableDate
+                fillTimeForPrayer("date", data)
+
+
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+    }
+
+
+
+    getPrayersTimingsOfCity("Dhī Qār")
+
+    function fillTimeForPrayer(id, time) {
+        document.getElementById(id).textContent = time
+
+    }
+
+    function fillplass(id, timee) {
+        document.getElementById(id).innerHTML += timee
+
+    }
+</script>
+
+</html>
